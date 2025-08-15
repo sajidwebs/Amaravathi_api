@@ -29,8 +29,9 @@ app.use(morgan('dev'));
 
 // Allow React app to fetch images
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'],
   credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 app.use(express.json());
@@ -51,17 +52,10 @@ if (!fs.existsSync(publicDir)) {
 }
 
 // Serve images without authentication middleware
-app.use('/uploads', express.static(uploadsDir, { setHeaders: setCorsHeaders }));
-app.use('/uploads/vendors', express.static(path.join(__dirname, 'uploads/vendors'), { setHeaders: setCorsHeaders }));
-app.use('/public', express.static(publicDir, { setHeaders: setCorsHeaders }));
-app.use('/public/vendors', express.static(path.join(__dirname, 'public/vendors'), { setHeaders: setCorsHeaders }));
-
-// Function to add CORS headers for static files
-function setCorsHeaders(res, path, stat) {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Methods', 'GET');
-  res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-}
+app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads/vendors', express.static(path.join(__dirname, 'uploads/vendors')));
+app.use('/public', express.static(publicDir));
+app.use('/public/vendors', express.static(path.join(__dirname, 'public/vendors')));
 
 // ===== ROUTES =====
 app.use('/api/vendors', vendorRoutes);
