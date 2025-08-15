@@ -72,6 +72,11 @@ app.get('/', (req, res) => {
   res.send('🌐 Amaravathi Admin Backend with PostgreSQL is running successfully!');
 });
 
+// Test endpoint for frontend connectivity
+app.get('/api/test', (req, res) => {
+  res.json({ success: true, message: 'API is accessible from frontend' });
+});
+
 // ===== 404 HANDLER =====
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'API endpoint not found' });
